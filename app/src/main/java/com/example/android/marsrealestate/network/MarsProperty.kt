@@ -24,9 +24,12 @@ import kotlinx.android.parcel.Parcelize
 
 
 @Parcelize
-class MarsProperty(
+data class MarsProperty(
         val id: String,
         @Json(name = "img_src") val imgSrcUrl: String,
         val type: String,
         val price: Double
-):Parcelable
+):Parcelable{
+    val isRental
+        get() = type == "rent"
+}
