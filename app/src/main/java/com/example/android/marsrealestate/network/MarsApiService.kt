@@ -41,6 +41,7 @@ private val retrofit = Retrofit.Builder()
         .build()
 
 //interface with @GET getProperties returning a List of MarsProperty Objects
+//Deferred is required for Coroutine
 interface MarsApiService{
     @GET("realestate")
     fun getProperties():

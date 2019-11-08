@@ -26,9 +26,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Response
-import retrofit2.Callback
 
 /**
  * The [ViewModel] that is attached to the [OverviewFragment].
@@ -36,11 +33,17 @@ import retrofit2.Callback
 class OverviewViewModel : ViewModel() {
 
     // The internal MutableLiveData String that stores the status of the most recent request
-    private val _response = MutableLiveData<String>()
+    private val _status = MutableLiveData<String>()
 
     // The external immutable LiveData for the request status String
-    val response: LiveData<String>
-        get() = _response
+    val status: LiveData<String>
+        get() = _status
+
+    //LiveData MarsProperty with an internal Mutable and an External LiveData
+    private val _property = MutableLiveData<MarsProperty>()
+    val property: LiveData<MarsProperty>
+        get() = _property
+
 
     //Creates a coroutine job and a CoroutineScope using the Main Dispatcher
     private var viewModelJob = Job()
@@ -63,9 +66,14 @@ class OverviewViewModel : ViewModel() {
             var getPropertiesDeferred = MarsApi.retrofitService.getProperties()
             try {
                 var listResult = getPropertiesDeferred.await()
-                _response.value = "Success: ${listResult.size} Mars properties retrieved"
+               // status.value = "Success: ${listResult.size} Mars properties retrieved"
+
+                //Update to set _property to the first element
+                if (listResult.isNotEmpty()){
+                    _property.value = listResult[0]
+                }
             } catch (t: Throwable) {
-                _response.value = "Failure: ${t.message}"
+                _status.value = "Failure: ${t.message}"
             }
         }
     }
