@@ -40,9 +40,9 @@ class OverviewViewModel : ViewModel() {
         get() = _status
 
     //LiveData MarsProperty with an internal Mutable and an External LiveData
-    private val _property = MutableLiveData<MarsProperty>()
-    val property: LiveData<MarsProperty>
-        get() = _property
+    private val _properties = MutableLiveData<List<MarsProperty>>()
+    val properties: LiveData<List<MarsProperty>>
+        get() = _properties
 
 
     //Creates a coroutine job and a CoroutineScope using the Main Dispatcher
@@ -68,9 +68,9 @@ class OverviewViewModel : ViewModel() {
                 var listResult = getPropertiesDeferred.await()
                // status.value = "Success: ${listResult.size} Mars properties retrieved"
 
-                //Update to set _property to the first element
+                //Update to set _properties to the first element
                 if (listResult.isNotEmpty()){
-                    _property.value = listResult[0]
+                    _properties.value = listResult
                 }
             } catch (t: Throwable) {
                 _status.value = "Failure: ${t.message}"
